@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Aurelia Hall{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="rail">Student homework presentation · Aurelia Hall · MMXXVI</p>
+  <div class="hero-copy">
+    <p class="kicker">Autumn term · {{ site.dates }}</p>
+    <h1>The work,<br><em>read aloud.</em></h1>
+    <p class="lede">Aurelia Hall is where student homework is given a room: ten minutes at the lectern, questions from the floor, and a contest that ends the week.</p>
+    <div class="actions">
+      <a class="btn btn-fill" href="{{ url_for('register') }}">Reserve a seat</a>
+      <a class="link-quiet" href="{{ url_for('schedule') }}">See who takes the floor</a>
+    </div>
+  </div>
+  <dl class="stats">
+    {% for stat in stats %}
+      <div>
+        <dt>{{ stat.label }}</dt>
+        <dd>{{ stat.n }}</dd>
+      </div>
+    {% endfor %}
+  </dl>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    {% for _ in [1, 2] %}
+      {% for name in faculties %}
+        <span>{{ name }}</span>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+
+<section class="band-paper">
+  <div class="frame">
+    <div class="section-head">
+      <div>
+        <p class="kicker">The evening</p>
+        <h2>Three movements,<br><em>then the corridor.</em></h2>
+      </div>
+      <p class="lede">No assembly, no bell. The Gold Hall keeps a ceremony small enough that a single page can fill it.</p>
+    </div>
+    <ol class="movements">
+      <li>
+        <span>01</span>
+        <h3>The reading</h3>
+        <p>Ten minutes. A paper, a model, or a page read in full. The room does not interrupt.</p>
+      </li>
+      <li>
+        <span>02</span>
+        <h3>The defense</h3>
+        <p>Questions from the faculty panel, then one from the seats. Bring the homework, not a script for the questions.</p>
+      </li>
+      <li>
+        <span>03</span>
+        <h3>The award</h3>
+        <p>Marks are held until Wednesday at half past seven, when the hall hears them together.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="band-ink">
+  <div class="frame">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Already on the programme</p>
+        <h2>Work worth<br><em>the first row.</em></h2>
+      </div>
+      <a class="link-quiet" href="{{ url_for('showcase') }}">Open the cabinet</a>
+    </div>
+    <div class="feature-grid">
+      {% for item in featured %}
+        <a class="feature" href="{{ url_for('showcase') }}#{{ item.slug }}">
+          <p class="index">0{{ loop.index }}</p>
+          <p class="kicker">{{ item.subject }}</p>
+          <h3>{{ item.title }}</h3>
+          <p class="by">{{ item.student }} · {{ item.year }}</p>
+          <p>{{ item.abstract }}</p>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band-paper">
+  <div class="frame">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Monday, to begin</p>
+        <h2>The first<br><em>sitting.</em></h2>
+      </div>
+      <a class="link-quiet link-ink" href="{{ url_for('schedule') }}">Full schedule</a>
+    </div>
+    <div class="slot-list">
+      {% for item in preview %}
+        <a class="slot" href="{{ url_for('schedule') }}">
+          <time datetime="{{ item.time }}">{{ item.time }}</time>
+          <div>
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.student }} · {{ item.subject }}</span>
+          </div>
+          <em class="tag">{{ item.track }}</em>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band-ink">
+  <div class="frame">
+    <div class="section-head">
+      <div>
+        <p class="kicker">The contest</p>
+        <h2>Four marks.<br><em>One hall.</em></h2>
+      </div>
+      <a class="link-quiet" href="{{ url_for('contest') }}">File a paper</a>
+    </div>
+    <div class="prize-grid">
+      {% for prize in prizes %}
+        <article class="prize">
+          <p class="index">0{{ loop.index }}</p>
+          <h3>{{ prize.name }}</h3>
+          <p>{{ prize.detail }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band-paper tight">
+  <div class="frame quote-block">
+    <blockquote>
+      <p>Bring the homework you almost kept in the folder.</p>
+      <footer>Said at the door, every autumn</footer>
+    </blockquote>
+    <ul class="judges">
+      {% for judge in judges %}
+        <li>
+          <strong>{{ judge.name }}</strong>
+          <span>{{ judge.chair }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="close">
+  <div class="frame close-grid">
+    <div>
+      <p class="kicker">This week</p>
+      <h2>A chair is<br><em>still open.</em></h2>
+    </div>
+    <div>
+      <p class="lede">The printed programme is set. Come to hear it, or file a paper for the winter sitting. Doors at {{ site.doors }}, {{ site.place }}.</p>
+      <div class="actions">
+        <a class="btn btn-fill" href="{{ url_for('register') }}">Reserve</a>
+        <a class="link-quiet" href="{{ url_for('contest') }}">Enter the contest</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

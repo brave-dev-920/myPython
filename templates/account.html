@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame auth-layout">
+    <div>
+      <p class="kicker">Signed in</p>
+      <h1>{{ current_user.name.split()[0] }},<br><em>the door knows you.</em></h1>
+      <p class="lede">This key is held for {{ current_user.email }}. Reservations and contest filings can use it.</p>
+    </div>
+    <div class="form-card account-card">
+      <p class="kicker">The key</p>
+      <dl class="account-facts">
+        <div>
+          <dt>Name</dt>
+          <dd>{{ current_user.name }}</dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd>{{ current_user.email }}</dd>
+        </div>
+        <div>
+          <dt>Signed in with</dt>
+          <dd>{{ current_user.access }}</dd>
+        </div>
+      </dl>
+      <div class="actions">
+        <a class="btn btn-fill" href="{{ url_for('register') }}">Reserve a seat</a>
+        <a class="link-quiet" href="{{ url_for('contest') }}">File for the contest</a>
+      </div>
+      <form method="post" action="{{ url_for('signout') }}" class="signout-form">
+        <button class="btn" type="submit">Sign out</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

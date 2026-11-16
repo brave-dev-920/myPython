@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Contest{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame">
+    <p class="kicker">Judged on Wednesday · 19:30</p>
+    <h1>Four marks.<br><em>One hall.</em></h1>
+    <p class="lede">The contest is the same homework, heard by four faculty and by the room. File a paper if it belongs on the floor. Pending work sits at the foot of the board until it is marked.</p>
+  </div>
+</section>
+
+<section class="band-ink tight-top">
+  <div class="frame">
+    <div class="prize-grid">
+      {% for prize in prizes %}
+        <article class="prize">
+          <p class="index">0{{ loop.index }}</p>
+          <h3>{{ prize.name }}</h3>
+          <p>{{ prize.detail }}</p>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class="category-grid">
+      {% for category in categories %}
+        <article>
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.blurb }}</p>
+        </article>
+      {% endfor %}
+    </div>
+
+    <div class="contest-layout">
+      <div>
+        <div class="section-head compact">
+          <div>
+            <p class="kicker">The board</p>
+            <h2>Standing.</h2>
+          </div>
+        </div>
+        <div class="filters" role="toolbar" aria-label="Filter the board">
+          <button type="button" class="chip is-on" data-filter="all">All</button>
+          {% for category in categories %}
+            <button type="button" class="chip" data-filter="{{ category.slug }}">{{ category.name }}</button>
+          {% endfor %}
+        </div>
+        <ol class="board">
+          {% for entry in entries %}
+            <li class="rank" data-track="{{ entry.category }}">
+              <span class="pos">{% if entry.pending %}New{% else %}{{ "%02d"|format(loop.index) }}{% endif %}</span>
+              <div>
+                <strong>{{ entry.title }}</strong>
+                <p class="meta">{{ entry.student }} · {{ entry.category_label }}</p>
+                {% if entry.pending %}
+                  <p class="pending">Awaiting the panel</p>
+                {% else %}
+                  <div class="bar" style="--w: {{ entry.score }}"><i></i><b>{{ entry.score }}</b></div>
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ol>
+        <p class="empty" hidden>No papers under that mark yet.</p>
+      </div>
+
+      <div class="form-card">
+        <p class="kicker">File for the contest</p>
+        <h2>Put the work<br><em>on the board.</em></h2>
+        {% if errors %}
+          <div class="errors" role="alert">
+            {% for error in errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('contest_submit') }}" class="form-grid">
+          <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true">
+          <label>
+            <span>Name</span>
+            <input name="name" maxlength="80" required value="{{ form.name }}">
+          </label>
+          <label>
+            <span>Email</span>
+            <input name="email" type="email" maxlength="120" required value="{{ form.email }}">
+          </label>
+          <label class="wide">
+            <span>Mark</span>
+            <select name="category" required>
+              <option value="" {% if not form.category %}selected{% endif %} disabled>Choose a mark</option>
+              {% for category in categories %}
+                <option value="{{ category.slug }}" {% if form.category == category.slug %}selected{% endif %}>{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="wide">
+            <span>Title</span>
+            <input name="title" maxlength="140" required value="{{ form.title }}">
+          </label>
+          <label class="wide">
+            <span>Abstract</span>
+            <textarea name="abstract" maxlength="600" rows="5" required>{{ form.abstract }}</textarea>
+          </label>
+          <div class="wide">
+            <button class="btn btn-fill" type="submit">File the paper</button>
+          </div>
+        </form>
+        <ul class="rules">
+          {% for rule in rules %}
+            <li>{{ rule }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

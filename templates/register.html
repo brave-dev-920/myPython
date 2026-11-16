@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Reserve{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame">
+    <p class="kicker">The steward’s book</p>
+    <h1>Ten minutes,<br><em>or a chair.</em></h1>
+    <p class="lede">This week’s floor is already printed. Reserve a seat for an evening, or file a paper for the winter sitting. A reservation holds one chair, or two.</p>
+  </div>
+</section>
+
+<section class="band-ink tight-top">
+  <div class="frame register-layout">
+    <div>
+      <p class="kicker">Seats still open</p>
+      <ul class="remain">
+        {% for evening, left in remaining.items() %}
+          <li class="{% if left == 0 %}is-full{% endif %}">
+            <strong>{{ left }}</strong>
+            <span>{{ evening }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <ol class="benefits">
+        <li>A named chair in the Gold Hall</li>
+        <li>The printed programme at the door</li>
+        <li>Tea in the corridor at the interval</li>
+        <li>A voice, if you take the one question from the seats</li>
+      </ol>
+
+      {% if bookings %}
+        <div class="held">
+          <p class="kicker">Held this sitting</p>
+          <ul>
+            {% for booking in bookings %}
+              <li>{{ booking.name }} · {{ booking.evening }} · {{ booking.party }} {% if booking.party == 1 %}seat{% else %}seats{% endif %}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      {% if papers %}
+        <div class="held">
+          <p class="kicker">Filed for winter</p>
+          <ul>
+            {% for paper in papers %}
+              <li>{{ paper.title }} · {{ paper.name }} · {{ paper.subject }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="form-card">
+      {% if errors %}
+        <div class="errors" role="alert">
+          {% for error in errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <form method="post" class="form-grid" id="reserve-form">
+        <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true">
+        <label class="wide">
+          <span>I am here to</span>
+          <select name="purpose" id="purpose">
+            <option value="seat" {% if form.purpose == 'seat' %}selected{% endif %}>Reserve a seat this week</option>
+            <option value="paper" {% if form.purpose == 'paper' %}selected{% endif %}>File a paper for winter</option>
+          </select>
+        </label>
+        <label>
+          <span>Name</span>
+          <input name="name" maxlength="80" required value="{{ form.name }}">
+        </label>
+        <label>
+          <span>Email</span>
+          <input name="email" type="email" maxlength="120" required value="{{ form.email }}">
+        </label>
+        <div class="seat-only contents">
+          <label>
+            <span>Evening</span>
+            <select name="evening">
+              {% for evening in evenings %}
+                <option value="{{ evening }}" {% if form.evening == evening %}selected{% endif %}>{{ evening }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            <span>Seats</span>
+            <select name="party">
+              <option value="1" {% if form.party == '1' %}selected{% endif %}>One</option>
+              <option value="2" {% if form.party == '2' %}selected{% endif %}>Two</option>
+            </select>
+          </label>
+        </div>
+        <div class="paper-only contents">
+          <label>
+            <span>Year</span>
+            <select name="year">
+              <option value="" {% if not form.year %}selected{% endif %} disabled>Choose a year</option>
+              {% for year in years %}
+                <option value="{{ year }}" {% if form.year == year %}selected{% endif %}>{{ year }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            <span>Subject</span>
+            <select name="subject">
+              <option value="" {% if not form.subject %}selected{% endif %} disabled>Choose a subject</option>
+              {% for subject in subjects %}
+                <option value="{{ subject }}" {% if form.subject == subject %}selected{% endif %}>{{ subject }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="wide">
+            <span>Title of the work</span>
+            <input name="title" maxlength="140" value="{{ form.title }}">
+          </label>
+        </div>
+        <label class="wide">
+          <span>A note for the steward</span>
+          <textarea name="note" maxlength="400" rows="4">{{ form.note }}</textarea>
+        </label>
+        <div class="wide">
+          <button class="btn btn-fill" type="submit">Hold my place</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Schedule{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame">
+    <p class="kicker">The floor · {{ site.dates }}</p>
+    <h1>Who stands,<br><em>and when.</em></h1>
+    <p class="lede">Eight papers across Monday and Tuesday. Wednesday returns three finalists, then reads the marks. All of it in the Gold Hall.</p>
+    <div class="filters" role="toolbar" aria-label="Filter by faculty">
+      <button type="button" class="chip is-on" data-filter="all">All</button>
+      {% for track in tracks %}
+        <button type="button" class="chip" data-filter="{{ track }}">{{ track }}</button>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band-ink tight-top">
+  <div class="frame schedule-layout">
+    <div>
+      {% for day in days %}
+        <section class="day">
+          <h2>{{ day.day }} <em>{{ day.date }}</em></h2>
+          <div class="slot-list">
+            {% for item in day["items"] %}
+              <article class="slot" data-track="{{ item.track }}">
+                <time datetime="{{ item.time }}">{{ item.time }}</time>
+                <div>
+                  <strong>{{ item.title }}</strong>
+                  <span>{{ item.student }}{% if item.year %} · {{ item.year }}{% endif %} · {{ item.subject }}</span>
+                </div>
+                <em class="tag">{{ item.note or item.track }}</em>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endfor %}
+      <p class="empty" hidden>Nothing on the floor for that faculty.</p>
+    </div>
+    <aside class="running">
+      <p class="kicker">Monday and Tuesday</p>
+      <ol>
+        {% for time, label in running_order %}
+          <li><span>{{ time }}</span>{{ label }}</li>
+        {% endfor %}
+      </ol>
+      <p class="kicker wednesday-kicker">Wednesday</p>
+      <ol>
+        {% for time, label in wednesday_order %}
+          <li><span>{{ time }}</span>{{ label }}</li>
+        {% endfor %}
+      </ol>
+    </aside>
+  </div>
+</section>
+{% endblock %}

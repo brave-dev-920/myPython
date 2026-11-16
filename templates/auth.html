@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == 'signup' %}Sign up{% else %}Sign in{% endif %}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame auth-layout">
+    <div>
+      {% if mode == 'signup' %}
+        <p class="kicker">The book</p>
+        <h1>A name<br><em>for the door.</em></h1>
+        <p class="lede">Create an account with Gmail, or with Outlook, Yahoo, iCloud, Proton, and any school address.</p>
+      {% else %}
+        <p class="kicker">The door</p>
+        <h1>You are<br><em>expected.</em></h1>
+        <p class="lede">Sign in with Gmail or Microsoft, or with the password for any other address.</p>
+      {% endif %}
+      <ul class="benefits">
+        <li>Gmail and Google Mail</li>
+        <li>Outlook, Hotmail, and Live</li>
+        <li>Yahoo, iCloud, Proton, AOL, and Zoho</li>
+        <li>A school address, or any other mail</li>
+      </ul>
+    </div>
+
+    <div class="form-card">
+      <div class="socials">
+        <a class="btn btn-social" href="{{ url_for('oauth_start', provider='google', next=next_url) }}">
+          <span class="mark" aria-hidden="true">G</span>
+          Continue with Gmail
+        </a>
+        <a class="btn btn-social" href="{{ url_for('oauth_start', provider='microsoft', next=next_url) }}">
+          <span class="mark" aria-hidden="true">M</span>
+          Continue with Microsoft
+        </a>
+      </div>
+      <p class="divider">or use a password</p>
+
+      {% if errors %}
+        <div class="errors" role="alert">
+          {% for error in errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" class="auth-form" autocomplete="on">
+        <input class="hp" tabindex="-1" autocomplete="off" name="company" aria-hidden="true">
+        <input type="hidden" name="next" value="{{ next_url }}">
+        {% if mode == 'signup' %}
+          <label>
+            <span>Name</span>
+            <input name="name" maxlength="80" required autocomplete="name" value="{{ form.name }}">
+          </label>
+        {% endif %}
+        <label>
+          <span>Email</span>
+          <input data-mail name="email" type="email" maxlength="120" required autocomplete="username" value="{{ form.email }}">
+          <p class="provider-hint" id="provider-hint" hidden></p>
+        </label>
+        <label>
+          <span>Password</span>
+          <input name="password" type="password" minlength="8" maxlength="128" required autocomplete="{% if mode == 'signup' %}new-password{% else %}current-password{% endif %}">
+        </label>
+        {% if mode == 'signup' %}
+          <label>
+            <span>Confirm password</span>
+            <input name="confirm" type="password" minlength="8" maxlength="128" required autocomplete="new-password">
+          </label>
+        {% endif %}
+        <button class="btn btn-fill" type="submit">{% if mode == 'signup' %}Create the account{% else %}Sign in{% endif %}</button>
+      </form>
+
+      <p class="auth-switch">
+        {% if mode == 'signup' %}
+          Already in the book? <a href="{{ url_for('signin', next=next_url) }}">Sign in</a>
+        {% else %}
+          New to the hall? <a href="{{ url_for('signup', next=next_url) }}">Sign up</a>
+        {% endif %}
+      </p>
+      <script type="application/json" id="mail-providers">{{ mail_providers|tojson }}</script>
+    </div>
+  </div>
+</section>
+{% endblock %}

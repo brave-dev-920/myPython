@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Cabinet{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame">
+    <p class="kicker">The cabinet</p>
+    <h1>Work worth<br><em>keeping.</em></h1>
+    <p class="lede">A short account of each paper on this week’s floor. The object, if there is one, comes into the hall with its author.</p>
+  </div>
+</section>
+<section class="band-ink tight-top">
+  <div class="frame">
+    <div class="cabinet">
+      {% for work in works %}
+        <article class="work" id="{{ work.slug }}">
+          <p class="kicker">{{ work.subject }} · {{ work.track }}</p>
+          <h2>{{ work.title }}</h2>
+          <p class="by">{{ work.student }} · {{ work.year }}</p>
+          <p>{{ work.abstract }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

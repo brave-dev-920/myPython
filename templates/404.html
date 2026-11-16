@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Not on the programme{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="frame">
+    <p class="kicker">404</p>
+    <h1>Not on<br><em>the programme.</em></h1>
+    <p class="lede">That page is not in the hall. The schedule, the contest, and the steward’s book are.</p>
+    <div class="actions">
+      <a class="btn btn-fill" href="{{ url_for('home') }}">Return to the hall</a>
+      <a class="link-quiet" href="{{ url_for('schedule') }}">Read the schedule</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
